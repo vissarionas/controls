@@ -1,4 +1,5 @@
 import React from 'react';
+import Excel from 'exceljs';
 
 export default class App extends React.Component {
 
@@ -14,8 +15,12 @@ export default class App extends React.Component {
     this.setState({ files: event.target.files })
   }
 
-  logFiles(files) {
-    console.log(files)
+  readExcel(files) {
+    var workbook = new Excel.Workbook();
+    workbook.xlsx.readFile(files[0].path)
+      .then(function(workbook) {
+        console.log(workbook.getWorksheet(1).getRow(1).values);
+    });
   }
 
   render() {
@@ -23,11 +28,12 @@ export default class App extends React.Component {
       <div>
         <form onSubmit={ event => {
           event.preventDefault()
-          this.logFiles(this.state.files)
+          this.readExcel(this.state.files)
         }}>
-          <input type="file" onChange={
-            event => this.handleChange(event)
-          } multiple/>
+          <label>
+            Browse excel files:
+            <input type="file" accept=".xls, .xlsx" onChange={ event => this.handleChange(event) } multiple/>
+          </label>
           <input type="submit" value="Do something"></input>
         </form>
       </div>
