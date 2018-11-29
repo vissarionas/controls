@@ -1,47 +1,35 @@
 import React from 'react';
-import { FormGroup, FormControl, HelpBlock, ControlLabel, Button } from 'react-bootstrap';
 
 export default class App extends React.Component {
 
-  constructor(props, context) {
-    super(props, context);
+  constructor(props) {
+    super(props);
     this.handleChange = this.handleChange.bind(this);
     this.state = {
-      value: ''
+      files: ''
     };
   }
 
-  getValidationState() {
-    const length = this.state.value.length;
-    if (length > 10) return 'success';
-    else if (length > 5) return 'warning';
-    else if (length > 0) return 'error';
-    return null;
+  handleChange(event) {
+    this.setState({ files: event.target.files })
   }
 
-  handleChange(e) {
-    this.setState({ value: e.target.value });
+  logFiles(files) {
+    console.log(files)
   }
+
   render() {
     return (
       <div>
-        <form>
-          <FormGroup
-            controlId="formBasicText"
-            validationState={this.getValidationState()}
-          >
-            <ControlLabel>Working example with validation</ControlLabel>
-            <FormControl
-              type="text"
-              value={this.state.value}
-              placeholder="Enter text"
-              onChange={this.handleChange}
-            />
-            <FormControl.Feedback />
-            <HelpBlock>Validation is based on string length.</HelpBlock>
-          </FormGroup>
+        <form onSubmit={ event => {
+          event.preventDefault()
+          this.logFiles(this.state.files)
+        }}>
+          <input type="file" onChange={
+            event => this.handleChange(event)
+          } multiple/>
+          <input type="submit" value="Do something"></input>
         </form>
-        <Button bsStyle="success">Success</Button>
       </div>
     );
   }
